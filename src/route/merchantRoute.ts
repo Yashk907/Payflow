@@ -4,7 +4,7 @@ import merchantSchema from '../db/schemas/merchant.js'
 
 const merchantRouter = express.Router()
 
-merchantRouter.post('/CreateMerchant',async (req,res)=>{
+merchantRouter.post('/signUp',async (req,res)=>{
     const input = merchantSchema.parse(req.body);
     const merchant = await merchantSignUp(input);
     return res.status(201).json({
@@ -12,3 +12,5 @@ merchantRouter.post('/CreateMerchant',async (req,res)=>{
         data : merchant
     })
 })
+
+export default merchantRouter

@@ -1,7 +1,12 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import db from "./db/config/knex.js";
 import PG from "pg";
+
+import merchantRouter from "./route/merchantRoute.js";
+import { AppError } from "./utils/appError.js";
+import { ZodError } from "zod";
+import { error } from "node:console";
 
 console.log("ENV:", process.env.DB_HOST);
 console.log("USER:", process.env.DB_USER);
@@ -11,6 +16,36 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+
+app.use("/v1/api/merchant", merchantRouter);
+
+//Error handling
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof AppError) {
+    res.status(err.status).json({
+      error: {
+        code: err.code,
+        message: err.message,
+      },
+    });
+  }
+
+  if (err instanceof ZodError) {
+    res.status(400).json({
+      error: {
+        code: "validation_error",
+        message: err.message,
+      },
+    });
+  }
+
+  res.status(500).json({
+    error: {
+      code: "internal_error",
+      message: "something went wrong!!",
+    },
+  });
+});
 
 async function Server() {
   try {
@@ -29,6 +64,5 @@ async function Server() {
     db.destroy();
   }
 }
-
 
 Server();
