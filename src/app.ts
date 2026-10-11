@@ -8,9 +8,6 @@ import { AppError } from "./utils/appError.js";
 import { ZodError } from "zod";
 import { error } from "node:console";
 
-console.log("ENV:", process.env.DB_HOST);
-console.log("USER:", process.env.DB_USER);
-console.log("PASSWORD:", process.env.DB_PASSWORD);
 const app = express();
 
 app.use(express.json());
@@ -22,7 +19,7 @@ app.use("/v1/api/merchant", merchantRouter);
 //Error handling
 app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof AppError) {
-    res.status(err.status).json({
+    return res.status(err.status).json({
       error: {
         code: err.code,
         message: err.message,
@@ -31,7 +28,7 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
   }
 
   if (err instanceof ZodError) {
-    res.status(400).json({
+    return res.status(400).json({
       error: {
         code: "validation_error",
         message: err.message,
@@ -39,7 +36,9 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
     });
   }
 
-  res.status(500).json({
+  console.log(err)
+
+  return res.status(500).json({
     error: {
       code: "internal_error",
       message: "something went wrong!!",
@@ -60,8 +59,6 @@ async function Server() {
     });
   } catch (error) {
     console.log(`error in connecting to DB ${error}`);
-  } finally {
-    db.destroy();
   }
 }
 
