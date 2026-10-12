@@ -6,11 +6,13 @@ import PG from "pg";
 import merchantRouter from "./route/merchantRoute.js";
 import { AppError } from "./utils/appError.js";
 import { ZodError } from "zod";
-import { error } from "node:console";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
+
 
 const PORT = process.env.PORT || 3000;
 
