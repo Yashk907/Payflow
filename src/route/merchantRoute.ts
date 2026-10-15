@@ -21,22 +21,28 @@ merchantRouter.post("/signUp", async (req, res) => {
 merchantRouter.post("/signIn", async (req, res) => {
   const { email, password } = req.body;
   const merchantId = await merchantSignIn({ email, password });
-  const token = Jwt.sign({_id : merchantId},"PAYFLOW_SEC_907",{
-    expiresIn : "1d"
-  });
 
-  res.cookie("token",token);
+  const secret = process.env.PASSWORD_HASH;
+  if (typeof secret === "string") {
+    const token = Jwt.sign({ _id: merchantId }, secret, {
+      expiresIn: "1d",
+    });
+    res.cookie("token", token);
+  } else {
+    console.error("env import fail for token generation");
+    throw Error("env key is missing");
+  }
+
   return res.status(200).json({
     success: true,
     message: "merchant successfully signed in",
   });
 });
 
-
-merchantRouter.get("/getInfo", merchantAuthMiddleware,async(req,res)=>{
+merchantRouter.get("/getInfo", merchantAuthMiddleware, async (req, res) => {
   return res.status(200).json({
-    message : "test"
-  })
-})
+    message: req.merchant,
+  });
+});
 
 export default merchantRouter;

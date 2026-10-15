@@ -1,5 +1,4 @@
-import { PassThrough } from 'node:stream'
-import {email, z} from 'zod'
+import {z} from 'zod'
 
 const merchantSchema = z.object({
     name : z.string().trim().min(2).max(100),

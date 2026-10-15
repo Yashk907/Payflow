@@ -63,8 +63,6 @@ const merchantSignIn = async (input: { email: string; password: string }) => {
       throw new AppError(400, "invalid_cred", "check your email and password");
     }
 
-    console.log(merchant.password_hash);
-
     const validatePass = await bcrypt.compare(
       input.password,
       merchant.password_hash,

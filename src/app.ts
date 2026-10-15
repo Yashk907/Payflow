@@ -7,6 +7,7 @@ import merchantRouter from "./route/merchantRoute.js";
 import { AppError } from "./utils/appError.js";
 import { ZodError } from "zod";
 import cookieParser from "cookie-parser";
+import orderRouter from "./route/ordersRoute.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
 
 app.use("/v1/api/merchant", merchantRouter);
+app.use("/v1/api/orders",orderRouter);
 
 //Error handling
 app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {

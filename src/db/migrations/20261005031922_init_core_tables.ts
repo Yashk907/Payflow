@@ -26,7 +26,7 @@ export async function up(knex: Knex): Promise<void> {
     t.bigint('amount').notNullable();
     t.string('currency').notNullable().defaultTo("INR");
     t.text('receipt');
-    t.text('status').notNullable().defaultTo('crated');
+    t.text('status').notNullable().defaultTo('created');
     t.timestamp("created_at").notNullable().defaultTo(knex.fn.now());
   });
   await knex.raw('ALTER TABLE orders ADD CONSTRAINT orders_amount_positive CHECK (amount>0)');
