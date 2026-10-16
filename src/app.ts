@@ -35,7 +35,7 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
     return res.status(400).json({
       error: {
         code: "validation_error",
-        message: err.message,
+        message: err.issues,
       },
     });
   }
