@@ -14,6 +14,7 @@ import { validatePagination } from "../middleware/validations.js";
 const orderRouter = express.Router();
 
 orderRouter.use(orderAuthMiddleware);
+
 orderRouter.post("/create", async (req, res, next) => {
   const input = orderSchema.parse(req.body);
   const merchant_Id = req.merchant?.id;
@@ -31,7 +32,7 @@ orderRouter.post("/create", async (req, res, next) => {
 
 orderRouter.get("/:id", async (req, res) => {
   const merchant_id = req.merchant?.id;
-  const id = orderIdSchema.parse(req.params.id);
+  const id = await orderIdSchema.parse(req.params.id);
   if (!merchant_id)
     throw new AppError(401, "invalid_creds", "you are not authorized!!");
   const order = await fetchOrder(id, merchant_id);

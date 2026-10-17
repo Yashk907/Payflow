@@ -6,6 +6,7 @@ import {
 import merchantSchema from "../db/schemas/merchant.js";
 import Jwt from "jsonwebtoken";
 import { merchantAuthMiddleware } from "../middleware/merchantAuth.js";
+import { disableMerchantStatus, enableMerchantStatus } from "../controller/merchantController.js";
 
 const merchantRouter = express.Router();
 
@@ -45,4 +46,35 @@ merchantRouter.get("/getInfo", merchantAuthMiddleware, async (req, res) => {
   });
 });
 
+merchantRouter.post(
+  "/disableMerchant",
+  merchantAuthMiddleware,
+  async (req, res) => {
+    if (!req.merchant?.id) {
+      throw Error("merchnat is missing!");
+    }
+    const merchant = await disableMerchantStatus(req.merchant?.id);
+
+    return res.status(200).json({
+      success: true,
+      data: merchant,
+    });
+  },
+);
+
+merchantRouter.post(
+  "/enableMerchant",
+  merchantAuthMiddleware,
+  async (req, res) => {
+    if (!req.merchant?.id) {
+      throw Error("merchnat is missing!");
+    }
+    const merchant = await enableMerchantStatus(req.merchant?.id);
+
+    return res.status(200).json({
+      success: true,
+      data: merchant,
+    });
+  },
+);
 export default merchantRouter;
