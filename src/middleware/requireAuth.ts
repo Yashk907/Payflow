@@ -3,7 +3,7 @@ import { hashesMatch, hashKey, parseKey } from "../utils/ApiKey.js";
 import { AppError } from "../utils/appError.js";
 import db from "../db/config/knex.js";
 
-export const orderAuthMiddleware = async (
+export const requireAuth = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -37,7 +37,6 @@ export const orderAuthMiddleware = async (
     }
 
     req.merchant = { id: row.merchant_Id, name: row.name, email: row.email };
-    req.apiKey = key;
     next();
  
 };

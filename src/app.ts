@@ -8,6 +8,7 @@ import { AppError } from "./utils/appError.js";
 import { ZodError } from "zod";
 import cookieParser from "cookie-parser";
 import orderRouter from "./route/ordersRoute.js";
+import paymentRouter from "./route/paymentsRoute.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/v1/api/merchant", merchantRouter);
 app.use("/v1/api/orders",orderRouter);
+app.use("/v1/api/payments",paymentRouter);
 
 //Error handling
 app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {

@@ -1,19 +1,17 @@
 import express from "express";
-import { orderAuthMiddleware } from "../middleware/ordersAuth.js";
+import { requireAuth } from "../middleware/requireAuth.js";
 import {
   createOrder,
   fetchOrder,
   fetchOrders,
 } from "../controller/ordersController.js";
 import { orderIdSchema, orderSchema } from "../db/schemas/orders.js";
-import { success } from "zod";
-import { tr } from "zod/locales";
 import { AppError } from "../utils/appError.js";
 import { validatePagination } from "../middleware/validations.js";
 
 const orderRouter = express.Router();
 
-orderRouter.use(orderAuthMiddleware);
+orderRouter.use(requireAuth);
 
 orderRouter.post("/create", async (req, res, next) => {
   const input = orderSchema.parse(req.body);
