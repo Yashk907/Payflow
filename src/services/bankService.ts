@@ -16,14 +16,15 @@ export const createPaymentAtBank = async (
       signal: AbortSignal.timeout(timeoutMs),
     });
 
-    // 201 = approved, 402 = declined: both are definite answers from the bank
+    console.log(`response : ${res}`)
+    // approved or declined: definite answers
     if (res.status === 201 || res.status === 402) {
       return (await res.json()) as BankPayment;
     }
-    // any other response is unexpected, so the outcome is unknown
+    // unexpected response: outcome unknown
     return null;
   } catch {
-    // timeout / network failure: outcome unknown, caller should mark payment `unknown`
+    // timeout or network error: outcome unknown
     return null;
   }
 };
@@ -35,11 +36,10 @@ export const fetchPaymentStatus = async (reference: string) => {
       headers: { "Content-Type": "application/json" },
       signal: AbortSignal.timeout(timeoutMs),
     });
-    // 201 = approved, 402 = declined: both are definite answers from the bank
+    console.log(`response : ${res}`)
     if (res.status === 200 || res.status === 402) {
       return (await res.json()) as BankPayment;
     }
-    // any other response is unexpected, so the outcome is unknown
     return null;
   } catch {
     return null;
